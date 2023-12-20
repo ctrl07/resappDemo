@@ -1,8 +1,9 @@
 const orderList = document.getElementById('orders');
+const dapi = 'https://crudcrud.com/api/9bb069d411634ba08614c45300bec348'
 
 async function fetchOrders() {
     try {
-        const response = await axios.get('https://crudcrud.com/api/a2f5f458310d45bcb40005902d000419/orders');
+        const response = await axios.get(`${dapi}/orders`);
         response.data.forEach(displayOrderDetails);
     } catch (error) {
         console.error(error);
@@ -23,7 +24,7 @@ async function onPlaceOrder(event) {
     };
 
     try {
-        const response = await axios.post("https://crudcrud.com/api/a2f5f458310d45bcb40005902d000419/orders", orderData);
+        const response = await axios.post(`${dapi}/orders`, orderData);
 
         console.log(response);
 
@@ -39,7 +40,7 @@ async function onPlaceOrder(event) {
 
 async function removeOrder(li, orderData) {
     try {
-        const response = await axios.delete(`https://crudcrud.com/api/a2f5f458310d45bcb40005902d000419/orders/${orderData._id}`);
+        const response = await axios.delete(`${dapi}/orders/${orderData._id}`);
         
         console.log(response);
 
@@ -70,3 +71,16 @@ function createButton(text, className, clickHandler) {
 }
 
 window.addEventListener("DOMContentLoaded", fetchOrders);
+
+async function updateApi(event) {
+    event.preventDefault();
+
+    const newApi = document.getElementById('api').value;
+
+    try {
+        document.getElementById('api').value = '';
+        localStorage.setItem('crudCrudEndpoint', newApi);
+    } catch (error) {
+        console.error(error);
+    }
+}
