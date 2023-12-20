@@ -1,9 +1,9 @@
 const orderList = document.getElementById('orders');
-const dapi = 'https://crudcrud.com/api/9bb069d411634ba08614c45300bec348'
+let storedApi = localStorage.getItem('crudCrudEndpoint');
 
 async function fetchOrders() {
     try {
-        const response = await axios.get(`${dapi}/orders`);
+        const response = await axios.get(`${storedApi}/orders`);
         response.data.forEach(displayOrderDetails);
     } catch (error) {
         console.error(error);
@@ -24,7 +24,7 @@ async function onPlaceOrder(event) {
     };
 
     try {
-        const response = await axios.post(`${dapi}/orders`, orderData);
+        const response = await axios.post(`${storedApi}/orders`, orderData);
 
         console.log(response);
 
@@ -40,7 +40,7 @@ async function onPlaceOrder(event) {
 
 async function removeOrder(li, orderData) {
     try {
-        const response = await axios.delete(`${dapi}/orders/${orderData._id}`);
+        const response = await axios.delete(`${storedApi}/orders/${orderData._id}`);
         
         console.log(response);
 
@@ -75,11 +75,14 @@ window.addEventListener("DOMContentLoaded", fetchOrders);
 async function updateApi(event) {
     event.preventDefault();
 
-    const newApi = document.getElementById('api').value;
+    const newApi = document.getElementById('api').value.trim();
 
     try {
-        document.getElementById('api').value = '';
-        localStorage.setItem('crudCrudEndpoint', newApi);
+        if (newApi !== '') {
+            localStorage.setItem('crudCrudEndpoint', newApi);
+            storedApi = newApi;
+            await fetchOrders();
+        }
     } catch (error) {
         console.error(error);
     }
