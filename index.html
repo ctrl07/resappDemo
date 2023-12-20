@@ -14,8 +14,16 @@
 </head>
 <body>
     <div class="container">
+        <h6 class="text-center"></h6>
+        <div>
+            <form onsubmit="updateApi(event)">
+                <input type="text" class="form-control" id="api" name="api" placeholder="Enter new API">
+                <label for="api" class="form-label"></label><br>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
         <h1 class="text-center">Order Management App</h1>
-        <hr>  
+        <hr>
         <h2 class="text-center">Place your order</h2>
         <form id='newForm' class="row g-4" onsubmit="onPlaceOrder(event)">
             <div class="col-md-12">
