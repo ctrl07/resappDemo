@@ -1,10 +1,18 @@
 const orderList = document.getElementById('orders');
 let storedApi = localStorage.getItem('crudCrudEndpoint');
 
-async function fetchOrders() {
+async function fetchOrders(orderId) {
     try {
-        const response = await axios.get(`${storedApi}/orders`);
-        response.data.forEach(displayOrderDetails);
+        // if order id is provided show new order else show all the orders phew :)
+        const response = orderId
+            ? await axios.get(`${storedApi}/orders/${orderId}`)
+            : await axios.get(`${storedApi}/orders`);
+
+        if (orderId) {
+            displayOrderDetails(response.data);
+        } else {
+            response.data.forEach(displayOrderDetails);
+        }
     } catch (error) {
         console.error(error);
     }
@@ -28,7 +36,7 @@ async function onPlaceOrder(event) {
 
         console.log(response);
 
-        await fetchOrders();
+        await fetchOrders(response.data._id);
 
         document.getElementById('food').value = '';
         document.getElementById('tableNumber').value = '';
@@ -70,8 +78,6 @@ function createButton(text, className, clickHandler) {
     return button;
 }
 
-window.addEventListener("DOMContentLoaded", fetchOrders);
-
 async function updateApi(event) {
     event.preventDefault();
 
@@ -87,3 +93,5 @@ async function updateApi(event) {
         console.error(error);
     }
 }
+
+window.addEventListener("DOMContentLoaded", () => fetchOrders());
